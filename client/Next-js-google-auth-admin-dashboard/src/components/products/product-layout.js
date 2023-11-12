@@ -8,10 +8,14 @@ import { useRouter } from "next/navigation";
 
 const intialFormData = {
   name: "",
-  price: "",
-  visitors: 0,
-  sales: 0,
-  month: "",
+  id: 0,
+  value: 0,
+  time: new Date(),
+  type: {
+    idType: "",
+    label: "",
+    value: "",
+  },
 };
 
 export default function ProductLayout({ children }) {

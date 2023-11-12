@@ -10,8 +10,8 @@ const initialFormData = {
   visitors: 0,
   location: "",
   device: "",
-  premiumUserNo: 0,
-  month: "",
+  time: "",
+  productId: 0,
 };
 
 export default function VisitorsLayout({ children }) {
@@ -44,7 +44,7 @@ export default function VisitorsLayout({ children }) {
 
   return (
     <div>
-      <Button onClick={() => setShowModal(true)} text={"Add Visitors Info"} />
+      {/* <Button onClick={() => setShowModal(true)} text={"Add Visitors Info"} /> */}
       {children}
       <Modal
         show={showModal}

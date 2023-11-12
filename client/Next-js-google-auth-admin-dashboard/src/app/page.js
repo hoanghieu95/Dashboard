@@ -4,6 +4,10 @@ import DashboardLayout from "@/components/dashboard";
 async function extractAllProducts() {
   const res = await fetch("http://localhost:3000/api/product/all-products", {
     method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    },
     cache: "no-store",
   });
 
@@ -17,6 +21,10 @@ async function extractAllProducts() {
 async function extractAllVisitors() {
   const res = await fetch("http://localhost:3000/api/visitors/all-visitors", {
     method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    },
     cache: "no-store",
   });
 
@@ -30,6 +38,9 @@ export default async function Home() {
   const allVisitors = await extractAllVisitors();
 
   return (
-    <DashboardLayout allProducts={allProducts && allProducts.data} allVisitors={allVisitors && allVisitors.data} />
+    <DashboardLayout
+      allProducts={allProducts && allProducts.data}
+      allVisitors={allVisitors && allVisitors.data}
+    />
   );
 }

@@ -1,48 +1,31 @@
 "use client";
 
 import Card from "../card";
-import { FaUsers } from "react-icons/fa";
-import { BiMoneyWithdraw } from "react-icons/bi";
-import { MdOutlineProductionQuantityLimits } from "react-icons/md";
-import { BsFillPersonCheckFill } from "react-icons/bs";
+import { FaGauge, FaProductHunt } from "react-icons/fa6";
+import { WiThermometer } from "react-icons/wi";
+import { MdCircleNotifications } from "react-icons/md";
 import YearlyAnalyticsChart from "../YearlyAnalyticsChart";
 import VisitorsAnalytics from "../VisitorsAnalytics";
 import DeviceAnalytics from "../DeviceAnalytics";
 
+import { io } from "socket.io-client";
+
 export default function DashboardLayout({ allVisitors, allProducts }) {
   console.log(allProducts, allVisitors);
+  const socket = io.connect("http://localhost:3001");
+  const ProdSensorAir = allProducts
+    ? allProducts.filter((p, i) => p.type.idType === "cbkk1")
+    : [];
+  const ProdSensorHeat = allProducts
+    ? allProducts.filter((p, i) => p.type.idType == "cbnd1")
+    : [];
   return (
     <div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7">
         <Card
-          icon={<FaUsers size={25} />}
-          data={
-            allVisitors && allVisitors.length
-              ? allVisitors.reduce(
-                  (acc, visitorItem) =>
-                    parseInt(acc + visitorItem.premiumUserNo),
-                  0
-                )
-              : 0
-          }
-          label={"Total Premium Visitors"}
-        />
-        <Card
           data={allProducts && allProducts.length}
-          icon={<MdOutlineProductionQuantityLimits size={25} />}
+          icon={<FaProductHunt size={25} />}
           label={"Total Products"}
-        />
-        <Card
-          data={
-            allProducts && allProducts.length
-              ? allProducts.reduce(
-                  (acc, productItem) => parseInt(acc + productItem.sales),
-                  0
-                )
-              : 0
-          }
-          label={"Total Sales"}
-          icon={<BiMoneyWithdraw size={25} />}
         />
         <Card
           data={
@@ -53,8 +36,18 @@ export default function DashboardLayout({ allVisitors, allProducts }) {
                 )
               : 0
           }
-          label={"Total Visitors"}
-          icon={<BsFillPersonCheckFill size={25} />}
+          label={"Total Notifications"}
+          icon={<MdCircleNotifications size={25} />}
+        />
+        <Card
+          icon={<FaGauge size={25} />}
+          data={ProdSensorAir && ProdSensorAir.length}
+          label={"Total air sensors"}
+        />
+        <Card
+          data={ProdSensorHeat && ProdSensorHeat.length}
+          label={"Total heat sensors"}
+          icon={<WiThermometer size={25} />}
         />
       </div>
       <div className="mt-44 grid-cols-12 grid gap-4 md:mt-6 md:gap-6 2xl:mt-7 2xl:gap-7">
@@ -63,16 +56,14 @@ export default function DashboardLayout({ allVisitors, allProducts }) {
             allProducts && allProducts.length
               ? allProducts.map((productItem) => ({
                   ...productItem,
-                  revenue:
-                    productItem.price * productItem.sales -
-                    productItem.sales * 10,
-                  cost: productItem.sales * 10,
                 }))
               : []
           }
+          socket={socket}
         />
         <VisitorsAnalytics
           allVisitors={allVisitors && allVisitors.length ? allVisitors : []}
+          socket={socket}
         />
       </div>
       <div className="cols-span-12">

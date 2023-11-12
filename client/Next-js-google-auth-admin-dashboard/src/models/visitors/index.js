@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 const VisitorsSchema = new mongoose.Schema(
   {
     visitors: Number,
-    location: String,
-    device: String,
-    premiumUserNo: Number,
-    month: String,
+    productId: Number,
+    title: String,
+    message: String,
+    time: Date,
   },
   { timestamps: true }
 );

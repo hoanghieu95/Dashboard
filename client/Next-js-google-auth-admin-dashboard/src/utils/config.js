@@ -7,80 +7,33 @@ export const productFormControls = [
     componentType: "input",
   },
   {
-    id: "visitors",
+    id: "id",
     type: "number",
-    placeholder: "Enter No of visitors",
-    label: "No of visitors",
+    placeholder: "Enter Product ID",
+    label: "Product ID",
     componentType: "input",
   },
   {
-    id: "price",
-    type: "number",
-    placeholder: "Enter Product Price",
-    label: "Product Price",
-    componentType: "input",
-  },
-  {
-    id: "sales",
-    type: "number",
-    placeholder: "Enter No of sales",
-    label: "No of Sales",
-    componentType: "input",
-  },
-  {
-    id: "month",
+    id: "type",
     type: "",
     placeholder: "",
-    label: "Month",
+    label: "type",
     componentType: "select",
     options: [
       {
-        id: "jan",
-        label: "January",
+        id: "cbl1",
+        label: "Cảm biến lửa",
+        value: "",
       },
       {
-        id: "feb",
-        label: "February",
+        id: "cbnd1",
+        label: "Cảm biến nhiệt độ",
+        value: "độ C",
       },
       {
-        id: "mar",
-        label: "March",
-      },
-      {
-        id: "apr",
-        label: "April",
-      },
-      {
-        id: "may",
-        label: "May",
-      },
-      {
-        id: "jun",
-        label: "June",
-      },
-      {
-        id: "jul",
-        label: "July",
-      },
-      {
-        id: "aug",
-        label: "August",
-      },
-      {
-        id: "sep",
-        label: "September",
-      },
-      {
-        id: "oct",
-        label: "October",
-      },
-      {
-        id: "nov",
-        label: "November",
-      },
-      {
-        id: "dec",
-        label: "December",
+        id: "cbg1",
+        label: "Cảm biến không khí",
+        value: "%",
       },
     ],
   },
@@ -88,24 +41,20 @@ export const productFormControls = [
 
 export const productTableHeaders = [
   {
+    id: "id",
+    label: "ID",
+  },
+  {
     id: "name",
     label: "Name",
   },
   {
-    id: "month",
-    label: "Month",
+    id: "type",
+    label: "Type",
   },
   {
-    id: "price",
-    label: "Price",
-  },
-  {
-    id: "sales",
-    label: "Sales",
-  },
-  {
-    id: "revenue",
-    label: "Revenue",
+    id: "time",
+    label: "Time",
   },
 ];
 
@@ -140,43 +89,18 @@ export const visiorsFormControls = [
     componentType: "input",
   },
   {
-    id: "premiumUserNo",
-    type: "number",
-    placeholder: "Enter premiumUser no",
-    label: "Premium Users No",
-    componentType: "input",
-  },
-  {
-    id: "location",
+    id: "title",
     type: "text",
-    placeholder: "Enter location",
-    label: "Location",
+    placeholder: "Enter title",
+    label: "Title",
     componentType: "input",
   },
   {
-    id: "device",
-    type: "",
-    placeholder: "",
-    label: "Device",
-    componentType: "select",
-    options: [
-      {
-        id: "desktop",
-        label: "Desktop",
-      },
-      {
-        id: "laptop",
-        label: "laptop",
-      },
-      {
-        id: "tablet",
-        label: "Tablet",
-      },
-      {
-        id: "mobile",
-        label: "Mobile",
-      },
-    ],
+    id: "message",
+    type: "text",
+    placeholder: "Enter message",
+    label: "Message",
+    componentType: "input",
   },
   {
     id: "month",
@@ -239,27 +163,22 @@ export const visiorsFormControls = [
 
 export const visitorsTableHeaders = [
   {
-    id: "visitors",
-    label: "Visitors",
+    id: "id",
+    label: "ID",
   },
   {
-    id: "location",
-    label: "Location",
+    id: "title",
+    label: "Title",
   },
   {
-    id: "device",
-    label: "Device",
+    id: "message",
+    label: "Message",
   },
   {
-    id: "premiumUserNo",
-    label: "Premium Visitor",
-  },
-  {
-    id: "month",
-    label: "Month",
+    id: "time",
+    label: "Time",
   },
 ];
-
 
 export const yearlyAnalyticsChartOptions = {
   legend: {
@@ -338,20 +257,7 @@ export const yearlyAnalyticsChartOptions = {
   },
   xaxis: {
     type: "category",
-    categories: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
+    categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
     axisBorder: {
       show: false,
     },
@@ -366,7 +272,7 @@ export const yearlyAnalyticsChartOptions = {
       },
     },
     min: 0,
-    max: 20000,
+    max: 100,
   },
 };
 
@@ -425,7 +331,6 @@ export const visitorAnalyticsChartOptions = {
     opacity: 1,
   },
 };
-
 
 export const deviceAnalyticsChartOptions = {
   chart: {

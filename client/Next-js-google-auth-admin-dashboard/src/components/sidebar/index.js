@@ -3,6 +3,7 @@
 import { LuLayoutDashboard } from "react-icons/lu";
 import { TbBrandProducthunt } from "react-icons/tb";
 import { PiUsersFourLight } from "react-icons/pi";
+import { MdNotificationsNone } from "react-icons/md";
 import { useContext } from "react";
 import { GlobalContext } from "@/context";
 import Link from "next/link";
@@ -24,9 +25,9 @@ const menuItems = [
   },
   {
     id: "visitors",
-    label: "Visitors",
+    label: "Notifications",
     path: "/visitors",
-    icon: <PiUsersFourLight size={25} />,
+    icon: <MdNotificationsNone size={25} />,
   },
 ];
 
@@ -53,7 +54,7 @@ export default function Sidebar() {
     >
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <Link href={"/"} className="text-[40px] text-white">
-          Analytics
+          Dashboard
         </Link>
       </div>
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear">
