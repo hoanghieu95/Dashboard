@@ -14,7 +14,6 @@ const intialFormData = {
   type: {
     idType: "",
     label: "",
-    value: "",
   },
 };
 

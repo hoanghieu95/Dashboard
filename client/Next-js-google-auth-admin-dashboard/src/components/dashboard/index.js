@@ -10,43 +10,58 @@ import DeviceAnalytics from "../DeviceAnalytics";
 
 import { io } from "socket.io-client";
 
-export default function DashboardLayout({ allVisitors, allProducts }) {
-  console.log(allProducts, allVisitors);
+export default function DashboardLayout({
+  allVisitors,
+  allProducts,
+  allHistories,
+}) {
+  console.log(allProducts, allVisitors, allHistories);
   const socket = io.connect("http://localhost:3001");
+
   const ProdSensorAir = allProducts
     ? allProducts.filter((p, i) => p.type.idType === "cbkk1")
     : [];
   const ProdSensorHeat = allProducts
     ? allProducts.filter((p, i) => p.type.idType == "cbnd1")
     : [];
+
+  const productCount = allProducts
+    ? Array.from(new Set(allProducts.map((p) => p.id))).length
+    : 0;
+
+  const sensorAirCount = ProdSensorAir
+    ? Array.from(new Set(ProdSensorAir.map((p) => p.id))).length
+    : 0;
+
+  const sensorHeatCount = ProdSensorHeat
+    ? Array.from(new Set(ProdSensorHeat.map((p) => p.id))).length
+    : 0;
+
+  const notiCount = allVisitors
+    ? allVisitors.filter((visitor) => visitor.visitors).length
+    : 0;
+
   return (
     <div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7">
         <Card
-          data={allProducts && allProducts.length}
+          data={productCount}
           icon={<FaProductHunt size={25} />}
           label={"Total Products"}
         />
         <Card
-          data={
-            allVisitors && allVisitors.length
-              ? allVisitors.reduce(
-                  (acc, visitorItem) => parseInt(acc + visitorItem.visitors),
-                  0
-                )
-              : 0
-          }
+          data={notiCount}
           label={"Total Notifications"}
           icon={<MdCircleNotifications size={25} />}
         />
         <Card
           icon={<FaGauge size={25} />}
-          data={ProdSensorAir && ProdSensorAir.length}
+          data={sensorAirCount}
           label={"Total air sensors"}
         />
         <Card
-          data={ProdSensorHeat && ProdSensorHeat.length}
-          label={"Total heat sensors"}
+          data={sensorHeatCount}
+          label={"Total temperature sensors"}
           icon={<WiThermometer size={25} />}
         />
       </div>
@@ -59,9 +74,30 @@ export default function DashboardLayout({ allVisitors, allProducts }) {
                 }))
               : []
           }
+          allHistories={
+            allHistories && allHistories.length
+              ? allHistories.map((his) => ({
+                  ...his,
+                }))
+              : []
+          }
           socket={socket}
         />
         <VisitorsAnalytics
+          allProducts={
+            allProducts && allProducts.length
+              ? allProducts.map((productItem) => ({
+                  ...productItem,
+                }))
+              : []
+          }
+          allHistories={
+            allHistories && allHistories.length
+              ? allHistories.map((his) => ({
+                  ...his,
+                }))
+              : []
+          }
           allVisitors={allVisitors && allVisitors.length ? allVisitors : []}
           socket={socket}
         />

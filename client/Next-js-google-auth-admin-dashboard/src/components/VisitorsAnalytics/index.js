@@ -1,42 +1,66 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { visitorAnalyticsChartOptions } from "@/utils/config";
 import ReactApexChart from "react-apexcharts";
 
-function getAllVisitorsByCountry(data, country) {
-  if (data && data.length === 0) return 0;
+const SensorDisplay = ({ label, value, unit }) => (
+  <div className="flex items-center">
+    <div className={`mr-2 w-1/2`}>
+      Current {label}:{" "}
+      {typeof value === 'object' ? "N/A" : value} {unit}
+    </div>
+    <div className="w-1/2">
+      <button className={`h-3 w-5 bg-secondary ml-auto mr-4`} />
+      {label}
+    </div>
+  </div>
+);
 
-  return data
-    .filter((item) => item.location === country)
-    .reduce((acc, visitorItem) => acc + visitorItem.visitors, 0);
-}
 
+export default function VisitorsAnalytics({
+  allVisitors,
+  allProducts,
+  allHistories,
+  socket,
+}) {
+  const [gasValue, setGasValue] = useState({});
+  const [gasData, setGasData] = useState([]);
 
+  useEffect(() => {
+    const handleSensorData = (message) => {
+      const data = JSON.parse(message);
+      const gas = data.gas;
 
-export default function VisitorsAnalytics({ allVisitors, socket }) {
-  const uniqueLocation = [...new Set(allVisitors.map((item) => item.location))];
-  console.log(uniqueLocation, "allVisitors");
+      setGasValue(gas);
 
-  const maxUniqueLocationToShow = uniqueLocation.slice(
-    0,
-    uniqueLocation && uniqueLocation.length > 4 ? 4 : uniqueLocation.length
-  );
+      setGasData((prevGasData) => {
+        return [
+          ...prevGasData,
+          { x: new Date().getTime(), y: gas }, // Thêm dữ liệu mới vào mảng
+        ];
+      });
+    };
 
-  let updatedOptions = {
-    ...visitorAnalyticsChartOptions,
-    xaxis: {
-      categories: maxUniqueLocationToShow,
-    },
-  };
+    socket.on("sensor", handleSensorData);
+
+    return () => {
+      socket.off("sensor", handleSensorData);
+    };
+  }, [socket]);
 
   const series = [
     {
-      name: "Visitors",
-      data: maxUniqueLocationToShow.map((locationItem) =>
-        getAllVisitorsByCountry(allVisitors, locationItem)
-      ),
+      name: "Gas",
+      data: gasData.map(dataPoint => dataPoint.y),
     },
-  ];
+  ];  
+
+  const updatedOptions = {
+    ...visitorAnalyticsChartOptions,
+    xaxis: {
+      type: [],
+    },
+  };
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7 pb-7 shadow sm:px-7.5 xl:col-span-4">
@@ -47,9 +71,14 @@ export default function VisitorsAnalytics({ allVisitors, socket }) {
             <ReactApexChart
               options={updatedOptions}
               series={series}
-              type="area"
+              type="line"
               height={350}
             />
+          </div>
+          <div className="ms-3 font-bold text-primary">
+            <div>
+              <SensorDisplay label="Gas" value={gasValue} unit="%" />
+            </div>
           </div>
         </div>
       </div>

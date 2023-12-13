@@ -2,6 +2,8 @@ import { deviceMapper, monthsMapper, visitorsTableHeaders } from "@/utils/config
 import Table from "../Table";
 import moment from "moment";
 
+import { io } from "socket.io-client";
+
 
 async function extractAllVisitors() {
   const res = await fetch("http://localhost:3000/api/visitors/all-visitors", {
@@ -16,7 +18,10 @@ async function extractAllVisitors() {
 }
 
 export default async function VisitorsList() {
+  const socket = io.connect("http://localhost:3001");
+
   const allVisitors = await extractAllVisitors();
+  
   return (
     <Table
       tableHeaderText="All Notification Overview"

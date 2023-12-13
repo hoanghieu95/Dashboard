@@ -1,44 +1,86 @@
 "use client";
-
+import { useEffect, useState } from "react";
 import { yearlyAnalyticsChartOptions } from "@/utils/config";
 import ReactApexChart from "react-apexcharts";
 
-const daysArray = [
-  "mon",
-  "tue",
-  "wed",
-  "thu",
-  "fri",
-  "sat",
-  "sun",
-];
+const SensorDisplay = ({ label, value, unit, bg }) => (
+  <div className="flex items-center">
+    <div className={`mr-2 w-1/2`}>
+      Current {label}: {typeof value === "object" ? "N/A" : value} {unit}
+    </div>
+    <div className="w-1/2">
+      <button className={`h-3 w-5 bg-${bg} ml-auto mr-4`} />
+      {label}
+    </div>
+  </div>
+);
 
-function getValues(products, getDay) {
-  if (products.filter((item) => item.day === getDay).length === 0) return 0;
+Date.prototype.getWeek = function () {
+  var onejan = new Date(this.getFullYear(), 0, 1);
+  var millisecsInDay = 86400000;
+  return Math.ceil(
+    ((this - onejan) / millisecsInDay + onejan.getDay() + 1) / 7
+  );
+};
 
-  return products
-    .filter((item) => item.day === getDay)
-    .reduce((acc, productItem) => acc + productItem.days, 0);
-}
+export default function YearlyAnalyticsChart({
+  allProducts,
+  allHistories,
+  socket,
+}) {
+  const [tempValue, setTempValue] = useState(null);
+  const [humiValue, setHumiValue] = useState(null);
+  const [tempData, setTempData] = useState([]);
+  const [humiData, setHumiData] = useState([]);
 
+  useEffect(() => {
+    const handleSensorData = (message) => {
+        const dataSensor = JSON.parse(message);
 
+        const temp = dataSensor.temp;
+        const humi = dataSensor.humi;
 
-export default function YearlyAnalyticsChart({ allProducts, socket }) {
-  console.log(allProducts);
+        setTempValue(temp);
+        setHumiValue(humi);
 
-  socket.on("data", (data) => {
-      console.log(data);
-  
+        setTempData((prevTempData) => {
+          return [
+            ...prevTempData,
+            { x: new Date().getTime(), y: temp }, // Thêm dữ liệu mới vào mảng
+          ];
+        });
 
-    });
+        setHumiData((prevHumiData) => {
+          return [
+            ...prevHumiData,
+            { x: new Date().getTime(), y: humi }, // Thêm dữ liệu mới vào mảng
+          ];
+        });
+       
+    };
 
-  const ProdSensorHeat = allProducts
-    ? allProducts.filter((p, i) => p.type.idType == "cbnd1")
-    : [];
+    socket.on("sensor", handleSensorData);
+
+    return () => {
+      socket.off("sensor", handleSensorData);
+    };
+  }, [socket]);
+
+  const updatedOptions = {
+    ...yearlyAnalyticsChartOptions,
+    xaxis: {
+      type: [],
+    },
+  };
+
   const series = [
     {
       name: "Temperature",
-      data: daysArray.map((item) => getValues(allProducts, item)),
+      data: tempData.map(dataPoint => dataPoint.y),
+    },
+    {
+      name: "Humidity",
+      data: humiData.map(dataPoint => dataPoint.y),
     },
   ];
 
@@ -49,18 +91,21 @@ export default function YearlyAnalyticsChart({ allProducts, socket }) {
         <div className="w-full">
           <div id="YearlyAnalyticsChart" className="-ml-5">
             <ReactApexChart
-              options={yearlyAnalyticsChartOptions}
+              options={updatedOptions}
               series={series}
-              type="area"
-              height={350}
+              type="line"
+              height={380}
             />
+          </div>
+          <div className="ms-3 font-bold text-primary">
             <div>
-              <p>
-              {/* {ProdSensorHeat ? ProdSensorHeat.map((p) => ({
-                ...p,
-              })) : ""} */}
-              </p>
-              {console.log(ProdSensorHeat)}
+              <SensorDisplay
+                label="Temperature"
+                value={tempValue}
+                unit="độ C"
+                bg="red"
+              />
+              <SensorDisplay label="Humidity" value={humiValue} unit="%" bg="secondary"/>
             </div>
           </div>
         </div>

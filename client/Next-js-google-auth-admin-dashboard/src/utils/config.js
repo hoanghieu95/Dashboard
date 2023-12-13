@@ -21,19 +21,12 @@ export const productFormControls = [
     componentType: "select",
     options: [
       {
-        id: "cbl1",
-        label: "Cảm biến lửa",
-        value: "",
-      },
-      {
         id: "cbnd1",
         label: "Cảm biến nhiệt độ",
-        value: "độ C",
       },
       {
         id: "cbg1",
         label: "Cảm biến không khí",
-        value: "%",
       },
     ],
   },
@@ -168,7 +161,7 @@ export const visitorsTableHeaders = [
   },
   {
     id: "title",
-    label: "Title",
+    label: "Đánh giá",
   },
   {
     id: "message",
@@ -181,89 +174,179 @@ export const visitorsTableHeaders = [
 ];
 
 export const yearlyAnalyticsChartOptions = {
-  legend: {
-    show: false,
-    position: "top",
-    horizontalAlign: "left",
-  },
-  colors: ["#3C50E0", "#80CAEE"],
+  colors: ["#e2513c", "#80CAEE"],
   chart: {
-    fontFamily: "Satoshi, sans-serif",
-    height: 335,
-    type: "area",
-    dropShadow: {
-      enabled: true,
-      color: "#623CEA14",
-      top: 10,
-      blur: 4,
-      left: 0,
-      opacity: 0.1,
-    },
-
-    toolbar: {
-      show: false,
-    },
-  },
-  responsive: [
-    {
-      breakpoint: 1024,
-      options: {
-        chart: {
-          height: 300,
-        },
-      },
-    },
-    {
-      breakpoint: 1366,
-      options: {
-        chart: {
-          height: 350,
-        },
-      },
-    },
-  ],
-  stroke: {
-    width: [2, 2],
-    curve: "straight",
-  },
-  grid: {
-    xaxis: {
-      lines: {
-        show: true,
-      },
-    },
-    yaxis: {
-      lines: {
-        show: true,
-      },
+    height: 350,
+    type: "line",
+    zoom: {
+      enabled: false,
     },
   },
   dataLabels: {
     enabled: false,
   },
+  stroke: {
+    width: [5, 7, 5],
+    curve: "straight",
+    dashArray: [0, 8, 5],
+  },
+  title: {
+    text: "Page Statistics",
+    align: "left",
+  },
+  legend: {
+    tooltipHoverFormatter: function (val, opts) {
+      return (
+        val +
+        " - " +
+        opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] +
+        ""
+      );
+    },
+  },
   markers: {
-    size: 4,
-    colors: "#fff",
-    strokeColors: ["#3056D3", "#80CAEE"],
-    strokeWidth: 3,
-    strokeOpacity: 0.9,
-    strokeDashArray: 0,
-    fillOpacity: 1,
-    discrete: [],
+    size: 0,
     hover: {
-      size: undefined,
-      sizeOffset: 5,
+      sizeOffset: 6,
     },
   },
   xaxis: {
-    type: "category",
-    categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    axisBorder: {
+    categories: [],
+  },
+  tooltip: {
+    y: [
+      {
+        title: {
+          formatter: function (val) {
+            return val + " (mins)";
+          },
+        },
+      },
+      {
+        title: {
+          formatter: function (val) {
+            return val + " per session";
+          },
+        },
+      },
+    ],
+  },
+  grid: {
+    borderColor: "#f1f1f1",
+  },
+};
+
+// export const visitorAnalyticsChartOptions = {
+//   colors: ["#3C50E0", "#80CAEE"],
+//   chart: {
+//     fontFamily: "Satoshi, sans-serif",
+//     type: "bar",
+//     height: 335,
+//     stacked: true,
+//     toolbar: {
+//       show: false,
+//     },
+//     zoom: {
+//       enabled: false,
+//     },
+//   },
+
+//   responsive: [
+//     {
+//       breakpoint: 1536,
+//       options: {
+//         plotOptions: {
+//           bar: {
+//             borderRadius: 0,
+//             columnWidth: "25%",
+//           },
+//         },
+//       },
+//     },
+//   ],
+//   plotOptions: {
+//     bar: {
+//       horizontal: false,
+//       borderRadius: 0,
+//       columnWidth: "25%",
+//       borderRadiusApplication: "end",
+//       borderRadiusWhenStacked: "last",
+//     },
+//   },
+//   dataLabels: {
+//     enabled: false,
+//   },
+//   legend: {
+//     position: "top",
+//     horizontalAlign: "left",
+//     fontFamily: "Satoshi",
+//     fontWeight: 500,
+//     fontSize: "14px",
+
+//     markers: {
+//       radius: 99,
+//     },
+//   },
+//   fill: {
+//     opacity: 1,
+//   },
+// };
+
+export const visitorAnalyticsChartOptions = {
+  colors: ["#3C50E0"],
+  chart: {
+    fontFamily: "Satoshi, sans-serif",
+    type: "line", // Thay đổi kiểu biểu đồ thành line
+    height: 335,
+    toolbar: {
       show: false,
     },
-    axisTicks: {
-      show: false,
+    zoom: {
+      enabled: false,
     },
+  },
+  responsive: [
+    {
+      breakpoint: 1536,
+      options: {
+        plotOptions: {
+          line: {
+            // You can adjust line-specific options here
+          },
+        },
+      },
+    },
+  ],
+  plotOptions: {
+    line: {
+      fill: "origin", // This option fills the area below the line
+      opacity: 1,
+      curve: "smooth", // Add smooth curve to the line
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  legend: {
+    // position: "top",
+    // horizontalAlign: "left",
+    // fontFamily: "Satoshi",
+    // fontWeight: 500,
+    // fontSize: "14px",
+    // markers: {
+    //   radius: 99,
+    // },
+    tooltipHoverFormatter: function (val, opts) {
+      return (
+        val +
+        " - " +
+        opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] +
+        ""
+      );
+    },
+  },
+  fill: {
+    opacity: 0.7,
   },
   yaxis: {
     title: {
@@ -272,63 +355,18 @@ export const yearlyAnalyticsChartOptions = {
       },
     },
     min: 0,
-    max: 100,
+    max: 1000,
   },
-};
-
-export const visitorAnalyticsChartOptions = {
-  colors: ["#3C50E0", "#80CAEE"],
-  chart: {
-    fontFamily: "Satoshi, sans-serif",
-    type: "bar",
-    height: 335,
-    stacked: true,
-    toolbar: {
-      show: false,
-    },
-    zoom: {
-      enabled: false,
-    },
-  },
-
-  responsive: [
-    {
-      breakpoint: 1536,
-      options: {
-        plotOptions: {
-          bar: {
-            borderRadius: 0,
-            columnWidth: "25%",
+  tooltip: {
+    y: [
+      {
+        title: {
+          formatter: function (val) {
+            return val + " (per)";
           },
         },
       },
-    },
-  ],
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      borderRadius: 0,
-      columnWidth: "25%",
-      borderRadiusApplication: "end",
-      borderRadiusWhenStacked: "last",
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  legend: {
-    position: "top",
-    horizontalAlign: "left",
-    fontFamily: "Satoshi",
-    fontWeight: 500,
-    fontSize: "14px",
-
-    markers: {
-      radius: 99,
-    },
-  },
-  fill: {
-    opacity: 1,
+    ],
   },
 };
 

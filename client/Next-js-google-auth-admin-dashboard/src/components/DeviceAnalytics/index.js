@@ -29,7 +29,7 @@ export default function DeviceAnalytics({ allVisitors }) {
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7 pb-7 shadow sm:px-7.5 xl:col-span-5">
       <div className="flex w-full flex-col flex-wrap items-start justify-between gap-3 sm:flex-nowrap">
-        <p className="font-bold text-primary">Visitor Analytics By Devices</p>
+        <p className="font-bold text-primary">Access By Devices</p>
         <div className="w-full mb-2">
           <div
             id="deviceAnalyticsChart"
