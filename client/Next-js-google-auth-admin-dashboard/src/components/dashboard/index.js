@@ -7,6 +7,7 @@ import { MdCircleNotifications } from "react-icons/md";
 import YearlyAnalyticsChart from "../YearlyAnalyticsChart";
 import VisitorsAnalytics from "../VisitorsAnalytics";
 import DeviceAnalytics from "../DeviceAnalytics";
+import { useEffect, useState } from "react";
 
 import { io } from "socket.io-client";
 
@@ -17,6 +18,11 @@ export default function DashboardLayout({
 }) {
   console.log(allProducts, allVisitors, allHistories);
   const socket = io.connect("http://localhost:3001");
+  const [notiCount, setNotiCount] = useState(
+    allVisitors
+      ? allVisitors.filter((visitor) => visitor.visitors).length
+      : 0
+  );
 
   const ProdSensorAir = allProducts
     ? allProducts.filter((p, i) => p.type.idType === "cbkk1")
@@ -37,9 +43,18 @@ export default function DashboardLayout({
     ? Array.from(new Set(ProdSensorHeat.map((p) => p.id))).length
     : 0;
 
-  const notiCount = allVisitors
-    ? allVisitors.filter((visitor) => visitor.visitors).length
-    : 0;
+    useEffect(() => {
+      const handleNotiData = (message) => {
+        const notiSensor = JSON.parse(message);
+        setNotiCount((prevCount) => prevCount + 1);
+      };
+
+      socket.on("notification", handleNotiData);
+
+      return () => {
+        socket.off("notification", handleNotiData);
+      };
+    }, [socket]);
 
   return (
     <div>

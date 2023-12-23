@@ -7,7 +7,7 @@ const SensorDisplay = ({ label, value, unit }) => (
   <div className="flex items-center">
     <div className={`mr-2 w-1/2`}>
       Current {label}:{" "}
-      {typeof value === 'object' ? "N/A" : value} {unit}
+      {typeof value === 'object' ? "N/A" : value} 
     </div>
     <div className="w-1/2">
       <button className={`h-3 w-5 bg-secondary ml-auto mr-4`} />
@@ -25,6 +25,8 @@ export default function VisitorsAnalytics({
 }) {
   const [gasValue, setGasValue] = useState({});
   const [gasData, setGasData] = useState([]);
+  const [tooltipData, setTooltipData] = useState(null);
+
 
   useEffect(() => {
     const handleSensorData = (message) => {
@@ -39,6 +41,8 @@ export default function VisitorsAnalytics({
           { x: new Date().getTime(), y: gas }, // Thêm dữ liệu mới vào mảng
         ];
       });
+
+      setTooltipData(gas);
     };
 
     socket.on("sensor", handleSensorData);
@@ -51,16 +55,34 @@ export default function VisitorsAnalytics({
   const series = [
     {
       name: "Gas",
-      data: gasData.map(dataPoint => dataPoint.y),
+      data: gasData.map(dataPoint => dataPoint.y).slice(-7),
     },
   ];  
 
   const updatedOptions = {
     ...visitorAnalyticsChartOptions,
     xaxis: {
-      type: [],
+      show: false,
+    },
+    tooltip: {
+      y: [
+        {
+          title: {
+            formatter: function () {
+              return "Gas";
+            },
+          },
+          marker: {
+            show: false,
+          },
+        },
+      ],
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        return tooltipData;
+      },
     },
   };
+  
 
   return (
     <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7 pb-7 shadow sm:px-7.5 xl:col-span-4">

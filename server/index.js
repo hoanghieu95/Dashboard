@@ -55,7 +55,7 @@ io.on("connection", function (socket) {
     port: 12442,
     keepalive: 60,
     username: "dvioemit",
-    password: "WJzmH3j7O6kH",
+    password: "c33TGjwzp-VY",
   };
   // Kết nối đến MQTT Broker với tham số biến option đã khai báo
   var client = mqtt.connect("mqtt://soldier.cloudmqtt.com", options);

@@ -16,15 +16,22 @@ async function extractAllProducts() {
 export default async function ProductListing() {
   const allProducts = await extractAllProducts();
 
-  console.log(allProducts);
+  const filteredProducts = allProducts.data.reduce(
+    (acc, product) =>
+      acc.some((p) => p.id === product.id) ? acc : [...acc, product],
+    []
+  );
 
+
+  console.log(filteredProducts);
   return (
     <Table
       tableHeaderText="All Products Overview"
       tableHeaderCells={productTableHeaders}
       data={
-        allProducts && allProducts.data && allProducts.data.length
-          ? allProducts.data.map((item) => ({
+        filteredProducts &&
+        filteredProducts.length
+          ? filteredProducts.map((item) => ({
               ...item,
               type: item.type.label,
               idType: item.type.idType,

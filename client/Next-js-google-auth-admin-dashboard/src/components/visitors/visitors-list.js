@@ -1,6 +1,9 @@
+
 import { deviceMapper, monthsMapper, visitorsTableHeaders } from "@/utils/config";
 import Table from "../Table";
 import moment from "moment";
+// import { useEffect } from 'react';
+
 
 import { io } from "socket.io-client";
 
@@ -19,8 +22,22 @@ async function extractAllVisitors() {
 
 export default async function VisitorsList() {
   const socket = io.connect("http://localhost:3001");
-
   const allVisitors = await extractAllVisitors();
+
+  // useEffect(() => {
+  //   const handleNotiData = (message) => {
+  //       const notiSensor = JSON.parse(message);
+  //       // const allVisitors = await extractAllVisitors();
+
+  //   };
+
+  //   socket.on("notification", handleNotiData);
+
+  //   return () => {
+  //     socket.off("notification", handleNotiData);
+  //   };
+  // }, [socket]);
+
   
   return (
     <Table

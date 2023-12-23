@@ -190,10 +190,6 @@ export const yearlyAnalyticsChartOptions = {
     curve: "straight",
     dashArray: [0, 8, 5],
   },
-  title: {
-    text: "Page Statistics",
-    align: "left",
-  },
   legend: {
     tooltipHoverFormatter: function (val, opts) {
       return (
@@ -210,8 +206,9 @@ export const yearlyAnalyticsChartOptions = {
       sizeOffset: 6,
     },
   },
-  xaxis: {
-    categories: [],
+  yaxis: {
+    min: 0,
+    max: 100,
   },
   tooltip: {
     y: [
@@ -234,6 +231,7 @@ export const yearlyAnalyticsChartOptions = {
   grid: {
     borderColor: "#f1f1f1",
   },
+
 };
 
 // export const visitorAnalyticsChartOptions = {
@@ -328,14 +326,6 @@ export const visitorAnalyticsChartOptions = {
     enabled: false,
   },
   legend: {
-    // position: "top",
-    // horizontalAlign: "left",
-    // fontFamily: "Satoshi",
-    // fontWeight: 500,
-    // fontSize: "14px",
-    // markers: {
-    //   radius: 99,
-    // },
     tooltipHoverFormatter: function (val, opts) {
       return (
         val +
@@ -349,11 +339,6 @@ export const visitorAnalyticsChartOptions = {
     opacity: 0.7,
   },
   yaxis: {
-    title: {
-      style: {
-        fontSize: "0px",
-      },
-    },
     min: 0,
     max: 1000,
   },
@@ -362,7 +347,7 @@ export const visitorAnalyticsChartOptions = {
       {
         title: {
           formatter: function (val) {
-            return val + " (per)";
+            return val ;
           },
         },
       },

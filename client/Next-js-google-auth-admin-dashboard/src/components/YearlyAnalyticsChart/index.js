@@ -8,10 +8,10 @@ const SensorDisplay = ({ label, value, unit, bg }) => (
     <div className={`mr-2 w-1/2`}>
       Current {label}: {typeof value === "object" ? "N/A" : value} {unit}
     </div>
-    <div className="w-1/2">
+    {/* <div className="w-1/2">
       <button className={`h-3 w-5 bg-${bg} ml-auto mr-4`} />
       {label}
-    </div>
+    </div> */}
   </div>
 );
 
@@ -32,6 +32,12 @@ export default function YearlyAnalyticsChart({
   const [humiValue, setHumiValue] = useState(null);
   const [tempData, setTempData] = useState([]);
   const [humiData, setHumiData] = useState([]);
+
+  const [tooltipData, setTooltipData] = useState({
+    Temperature: null,
+    Humidity: null,
+  });
+  
 
   useEffect(() => {
     const handleSensorData = (message) => {
@@ -56,6 +62,11 @@ export default function YearlyAnalyticsChart({
             { x: new Date().getTime(), y: humi }, // Thêm dữ liệu mới vào mảng
           ];
         });
+
+        setTooltipData({
+          Temperature: temp,
+          Humidity: humi,
+        });
        
     };
 
@@ -69,18 +80,46 @@ export default function YearlyAnalyticsChart({
   const updatedOptions = {
     ...yearlyAnalyticsChartOptions,
     xaxis: {
-      type: [],
+      show: false,
+    },
+    tooltip: {
+      y: [
+        {
+          title: {
+            formatter: function () {
+              return "Temperature";
+            },
+          },
+          marker: {
+            show: false,
+          },
+        },
+        {
+          title: {
+            formatter: function () {
+              return "Humidity";
+            },
+          },
+          marker: {
+            show: false,
+          },
+        },
+      ],
+      custom: function ({ series, seriesIndex, dataPointIndex, w }) {
+        return tooltipData[series[seriesIndex].name];
+      },
     },
   };
+  
 
   const series = [
     {
       name: "Temperature",
-      data: tempData.map(dataPoint => dataPoint.y),
+      data: tempData.map(dataPoint => dataPoint.y).slice(-10),
     },
     {
       name: "Humidity",
-      data: humiData.map(dataPoint => dataPoint.y),
+      data: humiData.map(dataPoint => dataPoint.y).slice(-10),
     },
   ];
 
